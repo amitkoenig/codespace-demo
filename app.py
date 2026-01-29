@@ -2,6 +2,7 @@ import os
 import pickle
 import sqlite3
 from flask import Flask, request
+import json
 
 app = Flask(__name__)
 
@@ -33,8 +34,8 @@ def get_user():
 @app.route("/load")
 def load_data():
     data = request.args.get("data")
-    # BAD: Using pickle.loads on untrusted input
-    obj = pickle.loads(bytes(data, "utf-8"))  # CodeQL will flag this
+    # FIXED: Use json.loads on untrusted input instead of pickle.loads
+    obj = json.loads(data)
     return str(obj)
 
 @app.route("/")
